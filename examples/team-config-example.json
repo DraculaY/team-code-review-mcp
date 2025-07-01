@@ -1,0 +1,47 @@
+{
+  "projects": [
+    {
+      "name": "frontend-web",
+      "path": "/workspace/frontend",
+      "baseBranch": "main",
+      "targetBranch": "develop",
+      "description": "Main web application frontend"
+    },
+    {
+      "name": "backend-api",
+      "path": "/workspace/backend-api",
+      "baseBranch": "master",
+      "targetBranch": "release/v2.1",
+      "description": "Core API backend service"
+    },
+    {
+      "name": "mobile-app",
+      "path": "/workspace/mobile",
+      "baseBranch": "main",
+      "targetBranch": "feature/new-ui",
+      "description": "React Native mobile application"
+    },
+    {
+      "name": "microservice-user",
+      "path": "/workspace/services/user-service",
+      "baseBranch": "main",
+      "targetBranch": "hotfix/auth-issue",
+      "description": "User management microservice"
+    },
+    {
+      "name": "microservice-payment",
+      "path": "/workspace/services/payment-service",
+      "baseBranch": "main",
+      "targetBranch": "feature/stripe-integration",
+      "description": "Payment processing microservice"
+    }
+  ],
+  "settings": {
+    "defaultBaseBranch": "main",
+    "defaultTargetBranch": "develop",
+    "reportOutputPath": "./team-analysis-reports",
+    "reportFormat": "html",
+    "includeRiskAnalysis": true,
+    "includeOptimizationSuggestions": true
+  }
+} 
