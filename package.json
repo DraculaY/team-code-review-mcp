@@ -20,12 +20,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-org/team-code-review-mcp.git"
+    "url": "https://github.com/admin/team-code-review-mcp.git"
   },
   "bugs": {
-    "url": "https://github.com/your-org/team-code-review-mcp/issues"
+    "url": "https://github.com/admin/team-code-review-mcp/issues"
   },
-  "homepage": "https://github.com/your-org/team-code-review-mcp#readme",
+  "homepage": "https://github.com/admin/team-code-review-mcp#readme",
   "scripts": {
     "start": "node index.js",
     "dev": "node --watch index.js",
