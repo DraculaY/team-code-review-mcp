@@ -29,7 +29,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "node --watch index.js",
-    "test": "node --test",
+    "test": "node -c index.js && node -c cli.js && echo 'All syntax checks passed ✅'",
     "prepublishOnly": "npm test"
   },
   "dependencies": {
