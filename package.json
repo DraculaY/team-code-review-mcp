@@ -1,7 +1,7 @@
 {
   "name": "team-code-review-mcp",
-  "version": "1.0.0",
-  "description": "MCP tool for team code review and deep analysis across multiple projects",
+  "version": "1.1.0",
+  "description": "MCP tool for team code review with one-click analysis and document-enhanced intelligence across multiple projects",
   "main": "index.js",
   "type": "module",
   "keywords": [
@@ -11,7 +11,10 @@
     "git",
     "analysis",
     "security",
-    "performance"
+    "performance",
+    "documentation",
+    "quick-analysis",
+    "one-click"
   ],
   "author": "Your Team",
   "license": "MIT",

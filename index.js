@@ -11,7 +11,7 @@ import chalk from 'chalk';
 const server = new Server(
   {
     name: 'team-code-review-mcp',
-    version: '1.0.0',
+    version: '1.1.0',
   },
   {
     capabilities: {
@@ -128,6 +128,20 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           type: 'object',
           properties: {}
         }
+      },
+      {
+        name: 'quick_team_analysis',
+        description: 'One-click analysis for all configured team projects with smart defaults',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            message: {
+              type: 'string',
+              description: 'Optional message describing what to focus on in analysis',
+              default: 'Complete team analysis'
+            }
+          }
+        }
       }
     ],
   };
@@ -148,6 +162,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         return await addTeamProject(args);
       case 'list_team_projects':
         return await listTeamProjects(args);
+      case 'quick_team_analysis':
+        return await quickTeamAnalysis(args);
       default:
         throw new Error(`Unknown tool: ${name}`);
     }
@@ -286,6 +302,40 @@ async function listTeamProjects(args) {
     };
   } catch (error) {
     throw new Error(`Failed to list projects: ${error.message}`);
+  }
+}
+
+async function quickTeamAnalysis(args) {
+  const { message = 'Complete team analysis' } = args;
+  
+  try {
+    const projects = await configManager.getProjects();
+    if (projects.length === 0) {
+      throw new Error('No projects configured. Please run setup_team_projects first.');
+    }
+
+    const analysisResults = await analyzer.analyzeMultipleProjects(projects, {
+      includeRiskAnalysis: true,
+      includeOptimizationSuggestions: true
+    });
+
+    const reportPath = await reportGenerator.generateReport(analysisResults, {
+      outputPath: './team-analysis-reports',
+      format: 'html',
+      includeRiskAnalysis: true,
+      includeOptimizationSuggestions: true
+    });
+
+    return {
+      content: [
+        {
+          type: 'text',
+          text: `${chalk.green('📊 Team analysis completed!')}\n\nAnalyzed ${projects.length} projects\nReport generated: ${reportPath}\n\nSummary:\n${analysisResults.summary.map(s => `- ${s.project}: ${s.status} (${s.changes} changes, ${s.risks} risks)`).join('\n')}\n\n${message}`
+        }
+      ]
+    };
+  } catch (error) {
+    throw new Error(`Analysis failed: ${error.message}`);
   }
 }
 

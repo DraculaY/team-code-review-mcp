@@ -15,7 +15,7 @@ const reportGenerator = new ReportGenerator();
 program
   .name('team-code-review')
   .description('Team code review and analysis tool')
-  .version('1.0.0');
+  .version('1.1.0');
 
 // Setup command
 program
@@ -88,6 +88,81 @@ program
       
     } catch (error) {
       spinner.fail('Analysis failed');
+      console.error(`${chalk.red('Error:')} ${error.message}`);
+      process.exit(1);
+    }
+  });
+
+// Quick analysis command - one-click for team members
+program
+  .command('quick')
+  .alias('q')
+  .description('🚀 Quick one-click analysis for all configured projects')
+  .option('-m, --message <message>', 'Analysis message or focus area', 'Team quick analysis')
+  .action(async (options) => {
+    const spinner = ora('🚀 Running quick team analysis...').start();
+    
+    try {
+      // Try to auto-setup if no projects configured
+      let projects = await configManager.getProjects();
+      
+      if (projects.length === 0) {
+        spinner.text = 'No projects found, trying auto-setup from environment...';
+        try {
+          await configManager.setupProjects('env');
+          projects = await configManager.getProjects();
+        } catch (setupError) {
+          spinner.fail('Quick analysis failed');
+          console.error(`${chalk.red('Error:')} No projects configured and auto-setup failed.`);
+          console.error(`${chalk.yellow('Solution:')} Set TEAM_PROJECTS environment variable or run 'team-code-review setup'`);
+          console.error(`${chalk.gray('Example:')} export TEAM_PROJECTS="frontend:/path/to/frontend:main:develop|backend:/path/to/backend:main:develop"`);
+          process.exit(1);
+        }
+      }
+
+      if (projects.length === 0) {
+        spinner.fail('No projects available');
+        console.error(`${chalk.red('Error:')} No valid projects found for analysis.`);
+        process.exit(1);
+      }
+
+      spinner.text = `Analyzing ${projects.length} projects...`;
+      
+      const analysisResults = await analyzer.analyzeMultipleProjects(projects, {
+        includeRiskAnalysis: true,
+        includeOptimizationSuggestions: true
+      });
+
+      const reportPath = await reportGenerator.generateReport(analysisResults, {
+        outputPath: './team-analysis-reports',
+        format: 'html',
+        includeRiskAnalysis: true,
+        includeOptimizationSuggestions: true
+      });
+
+      spinner.succeed('🎉 Quick analysis completed');
+      
+      console.log(`\n${chalk.green.bold('📊 Team Analysis Report Generated!')}\n`);
+      console.log(`${chalk.cyan('Message:')} ${options.message}`);
+      console.log(`${chalk.cyan('Report:')} ${reportPath}`);
+      console.log(`${chalk.cyan('Projects:')} ${projects.length} analyzed\n`);
+      
+      // Enhanced summary with documentation info
+      console.log(chalk.bold('Quick Summary:'));
+      analysisResults.summary.forEach(s => {
+        const statusIcon = s.status === 'success' ? '✅' : '❌';
+        const riskColor = s.risks > 5 ? chalk.red : s.risks > 2 ? chalk.yellow : chalk.green;
+        const project = analysisResults.projects.find(p => p.project === s.project);
+        const docInfo = project && project.documentation && project.documentation.hasDocuments ? 
+          ` (📄 ${project.documentation.documents.length} docs)` : '';
+        
+        console.log(`  ${statusIcon} ${chalk.cyan(s.project)}${docInfo}: ${s.changes} changes, ${riskColor(s.risks)} risks`);
+      });
+      
+      console.log(`\n${chalk.gray('💡 Tip: Open the HTML report in your browser for detailed analysis with documentation insights!')}`);
+      
+    } catch (error) {
+      spinner.fail('Quick analysis failed');
       console.error(`${chalk.red('Error:')} ${error.message}`);
       process.exit(1);
     }

@@ -4,14 +4,44 @@
 
 ## 🚀 特性
 
+- **一键快速分析**: 🚀 团队成员只需一句话即可分析所有项目
+- **文档智能结合**: 📄 自动读取 `.document` 文件夹，结合项目文档增强分析
 - **多项目分析**: 同时分析多个项目
 - **环境变量配置**: 通过环境变量轻松设置
 - **分支比较**: 任意两个分支间的深度差异分析
-- **风险评估**: 自动检测安全、性能和代码质量风险
-- **优化建议**: AI驱动的代码优化建议
+- **智能风险评估**: 结合文档上下文的安全、性能和代码质量风险检测
+- **上下文优化建议**: AI驱动的代码优化建议，基于项目文档
 - **多种输出格式**: HTML、Markdown和JSON报告
 - **Git集成**: 与Git仓库无缝集成
 - **团队友好**: 专为团队协作和共享配置设计
+
+## ⚡ 快速开始 (团队成员专用)
+
+### 30秒快速分析
+
+```bash
+# 1. 设置项目 (只需一次)
+export TEAM_PROJECTS="frontend:/path/to/frontend:main:develop|backend:/path/to/backend:main:develop"
+
+# 2. 一键分析 - 就这么简单！
+npx team-code-review-mcp quick
+
+# 或者带自定义消息
+npx team-code-review-mcp quick -m "Sprint 23 代码审查"
+```
+
+### 文档增强分析
+
+在每个项目根目录创建 `.document` 文件夹，放入：
+- `requirements.md` - 需求文档  
+- `architecture.md` - 架构设计
+- `api-spec.md` - API规范
+- 其他相关文档
+
+工具会自动读取并结合这些文档来：
+- 提供更准确的风险评估
+- 给出上下文相关的优化建议
+- 检查代码变更是否符合文档要求
 
 ## 📦 安装
 
@@ -28,6 +58,12 @@ git clone https://github.com/your-org/team-code-review-mcp.git
 cd team-code-review-mcp
 npm install
 npm link
+```
+
+### 快速试用 (无需安装)
+
+```bash
+npx team-code-review-mcp quick
 ```
 
 ## 🔧 配置
@@ -70,19 +106,39 @@ export TEAM_TARGET_BRANCH="develop"
 
 ## 🎯 使用方法
 
-### 作为MCP工具使用 (推荐)
+### 🚀 方式一：一键快速分析 (推荐 - 团队成员最爱)
+
+```bash
+# 最简单的使用方式 - 自动检测环境变量配置
+team-code-review quick
+
+# 带分析消息
+team-code-review quick -m "本周迭代代码审查"
+
+# 简写形式
+team-code-review q -m "修复安全问题后的验证"
+```
+
+**特点：**
+- 🎯 自动尝试从环境变量设置项目
+- 📊 生成完整的HTML报告
+- 📄 自动扫描和分析 `.document` 文件夹
+- ⚡ 无需额外配置，开箱即用
+
+### 🛠 方式二：作为MCP工具使用
 
 与MCP兼容的客户端（如Claude Desktop）一起使用：
 
 1. 添加到你的MCP配置中
 2. 使用以下工具：
+   - `quick_team_analysis` - 🚀 一键分析所有项目
    - `setup_team_projects` - 配置项目
    - `analyze_team_projects` - 运行综合分析
    - `validate_team_config` - 验证配置
    - `add_team_project` - 添加新项目
    - `list_team_projects` - 列出配置的项目
 
-### 命令行接口
+### 📋 方式三：传统命令行接口
 
 ```bash
 # 从环境变量设置项目
