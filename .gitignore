@@ -40,3 +40,5 @@ security-analysis-reports/
 # Configuration files
 .team-code-review-config.json
 team-projects-config.json 
+
+task.md
